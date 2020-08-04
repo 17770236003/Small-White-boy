@@ -12,7 +12,7 @@ head={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit
            ' Hm_lpvt_703e94591e87be68cc8da0da7cbd0be2=1596036943; mojo-trace-id=3; _lxsdk_s=1739b308496-04b-643-594%7C%7C4'
 
 }
-posters=re.compile('<img alt=".*class="avatar" src="(.*?)"/>',re.S)#正则提取海报链接
+posters=re.compile('<img.*src="(.*?)"/>',re.S)#正则提取海报链接
 names=re.compile('<h1 class="name">(.*?)</h1>',re.S)                #提取电影名称
 synopsis=re.compile('<span class="dra">(.*?)</span>',re.S)          #提取电影简介
 
@@ -33,25 +33,26 @@ def get_url():
             href=base_url+href                      #通过网页首页的baseurl拼接成一个电影详情URL
             urls.append(href)
     return urls
-
-
-
-
-#定义获取电影详情的函数
+# 定义获取电影详情的函数
 def get_detail_mes():
     movies=[]
     urls=get_url()                       #将retur出来的URL传入函数
     for url in urls:                     # for url in urls:#一个URL一部电影
+        path="/Users/apple/PycharmProjects/python项目/pic/{}.jpg"
         movie = []                       #创建一个空列表用来把下面爬到的数据作为movies列表里面的一个元素，方便遍历存入数据库
         movie.append(url)
         response=requests.get(url,headers=head)
         html=response.content.decode('utf-8')
         html=BeautifulSoup(html,"lxml")
         items_1=str(html.find_all('div',class_="wrapper clearfix"))#正则表达式是对字符串进行操作，这里转成str
-        poster=posters.findall(items_1)[0]                          #利用上面的正则规则进行提取
+        poster=posters.findall(items_1)[0]#利用上面的正则规则进行提取
         movie.append(poster)
-        name=names.findall(items_1)[0]
+        name = names.findall(items_1)[0]
         movie.append(name)
+
+        with open(path.format(name),"wb") as f:
+            f.write(requests.get(poster).content)
+            print('正在下载~~~')
         items_2=str(html.find_all('div',class_="main-content"))
         synopsi=synopsis.findall(items_2)[0]
         movie.append(synopsi)
@@ -61,12 +62,12 @@ def creatdb():
     conn=sqlite3.connect("cat_movie.db")
     cur=conn.cursor()
     sql='''
-    create table cat(id int AUTO_INCREMENT ,
+    create table cat(id INTEGER primary key AUTOINCREMENT ,
     movieurl varchar not null,
     moviepost varchar no null ,
-    moviesynopsis varchar not null 
+    moviesynopsis varchar not null
     )
-    
+
     '''
     cur.execute(sql)
     conn.commit()
@@ -84,19 +85,8 @@ def save_movies():
         conn.commit()
     cur.close()
     conn.close()
-
-
-
-
-
-
-
-
-
-
-
-
 if __name__ == '__main__':
+    # get_url()
     # creatdb()
     # get_detail_mes()
     save_movies()
