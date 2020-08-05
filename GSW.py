@@ -29,8 +29,8 @@ data={
     "__VIEWSTATE": __VIEWSTATE,
     "__VIEWSTATEGENERATOR": __VIEWSTATEGENERATOR,
     "from": "http://so.gushiwen.cn/user/collect.aspx",
-    "email": "17770236003",
-    "pwd": "zhazong110",
+    "email": "#######",#账号
+    "pwd": "######",#密码
     "code" :code ,
     "denglu": "登录"
 
