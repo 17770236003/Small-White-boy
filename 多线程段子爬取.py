@@ -39,7 +39,7 @@ class Parse(Thread):
         while self.parse_queue.empty()==False:
             html=self.parse_queue.get()
             html=etree.HTML(html)
-            #xpath提取数据，获取每个同台图的标签，遍历解析
+            #xpath提取数据，获取每个动态图的标签，遍历解析
             heads=html.xpath('//div[@class="listgif-box"]')
             for head in heads:
                 gifs=[]
