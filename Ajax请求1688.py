@@ -36,8 +36,11 @@ class Spider(object):
         images = jsonpath(data, '$..offerList..image.imgUrl')
         prices = jsonpath(data, '$..offerPrice.valueString')
         detail_url = jsonpath(data, '$..information.detailUrl')
+        #突然发现pandas写更好。
+        data = pd.DataFrame({'商品名称': goods_titles, '商品图片': images, '商品价格': prices, '商品链接': detail_url})
+        data.to_csv('1688.csv', sep=',', mode='a')
         # 写入CSV
-        writer.writerows([[goods_titles], [images], [prices], [detail_url]])
+#         writer.writerows([[goods_titles], [images], [prices], [detail_url]])
         # data_fram = pd.DataFrame({'商品名': goods_titles, '商品图片': images, '商品价格': prices, '商品链接': detail_url})
         # data_fram.to_csv(r'1688.csv', sep='，')
 
@@ -54,8 +57,8 @@ class Spider(object):
 
 if __name__ == '__main__':
     base_url = 'https://search.1688.com/service/marketOfferResultViewService?select-faker=products&keywords=%C5%AE%D7%B0&n=y&mastheadtype=&from=industrySearch&industryFlag=&beginPage={}&async=true&asyncCount=20&pageSize=60&startIndex={}&offset=8'
-    fp = open('1688.csv', 'a+')
-    writer = csv.writer(fp)
-    writer.writerow(['商品名称', '商品图片', '商品价格', '商品链接'])
+#     fp = open('1688.csv', 'a+')
+#     writer = csv.writer(fp)
+#     writer.writerow(['商品名称', '商品图片', '商品价格', '商品链接'])
     spider = Spider(base_url)
     spider.run()
