@@ -45,6 +45,7 @@ class Spider(object):
         # data_fram.to_csv(r'1688.csv', sep='，')
 
     def run(self):
+        #这里只取8个url，获取多个写个while循环。
         for i in range(1, 8):
             index = 0
             self.url = base_url.format(str(i), str(index))
